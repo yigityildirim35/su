@@ -110,6 +110,9 @@ const tr = {
   'video.open': 'YouTube’da aç',
   'video.tip': 'İpucu: önce altyazısız izle, sonra İngilizce altyazıyla tekrar izle. Bilmediğin kelimeleri listene ekle.',
   'video.channels': 'Kanallar',
+  'video.watched': 'İzledim',
+  'video.markWatched': 'İzledim olarak işaretle',
+  'video.more': 'Bugünün diğer videoları',
 
   'more.title': 'Daha fazla',
   'settings.title': 'Ayarlar',
@@ -252,6 +255,9 @@ const en: Record<StringKey, string> = {
   'video.open': 'Open on YouTube',
   'video.tip': 'Tip: watch once without subtitles, then again with English subtitles. Add new words to your list.',
   'video.channels': 'Channels',
+  'video.watched': 'Watched',
+  'video.markWatched': 'Mark as watched',
+  'video.more': 'More videos for today',
 
   'more.title': 'More',
   'settings.title': 'Settings',

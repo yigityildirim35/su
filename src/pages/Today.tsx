@@ -3,7 +3,7 @@ import { QuoteCard } from '../components/QuoteCard'
 import { useSpecialDay } from '../components/SpecialDayContext'
 import { SpeakButton } from '../components/ui'
 import { speakingTopics } from '../content/speaking'
-import { channels, videoPicks } from '../content/videos'
+import { channelOf, thumbnail, videosForToday } from '../content/videos'
 import { pickForDay } from '../lib/date'
 import { isDue } from '../lib/srs'
 import { Mascot } from '../mascot/Mascot'
@@ -20,8 +20,7 @@ export function Today() {
   const special = useSpecialDay()
   const due = words.filter((w) => isDue(w.srs)).length
   const topic = pickForDay(speakingTopics[settings.level])
-  const video = pickForDay(videoPicks[settings.level], 3)
-  const channel = channels.find((c) => c.id === video?.channelId)
+  const video = videosForToday(settings.level)[0]
 
   return (
     <div className="rise space-y-4">
@@ -66,14 +65,18 @@ export function Today() {
           )}
         </section>
 
-        {video && channel && (
+        {video && (
           <Link to="/video" className="card block transition active:scale-[0.99]">
             <div className="flex items-center gap-3">
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-accent-soft text-3xl">▶️</div>
+              <div className="relative h-16 w-28 shrink-0 overflow-hidden rounded-2xl bg-accent-soft">
+                <img src={thumbnail(video)} alt="" loading="lazy" className="h-full w-full object-cover" />
+                <span className="absolute inset-0 flex items-center justify-center text-2xl drop-shadow">▶️</span>
+              </div>
               <div className="min-w-0 flex-1">
-                <h2 className="font-bold">{t('today.video')}</h2>
-                <p className="truncate text-sm text-muted">
-                  {channel.name} · {video.series} · {video.minutes} min
+                <h2 className="text-sm font-bold uppercase tracking-wide text-muted">{t('today.video')}</h2>
+                <p className="line-clamp-2 text-sm font-bold">{video.title}</p>
+                <p className="truncate text-xs text-muted">
+                  {channelOf(video).name} · {video.minutes} min
                 </p>
               </div>
             </div>

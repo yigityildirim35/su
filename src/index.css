@@ -87,6 +87,8 @@ button { cursor: pointer; touch-action: manipulation; }
 .pt-safe { padding-top: env(safe-area-inset-top); }
 .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
 
+/* In the components layer so Tailwind utilities (p-0, rounded-…) can still override them. */
+@layer components {
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -137,6 +139,7 @@ button { cursor: pointer; touch-action: manipulation; }
   font-size: 16px; /* prevents iOS zoom on focus */
 }
 .input:focus { outline: none; border-color: var(--primary); }
+}
 
 .en { color: var(--primary); font-weight: 600; }
 
