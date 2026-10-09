@@ -53,13 +53,12 @@ export function Mascot({ anim, size = 96, loop = true, className = '', label }: 
   return (
     <img
       src={frames[Math.min(index, frames.length - 1)]}
-      width={size}
       height={size}
       alt={label ?? ''}
       aria-hidden={label ? undefined : true}
       draggable={false}
-      className={`select-none object-contain ${className}`}
-      style={{ width: size, height: size }}
+      className={`mascot select-none object-contain ${className}`}
+      style={{ height: size, width: 'auto' }} // frames are tall drawings; size = figure height
     />
   )
 }

@@ -194,7 +194,7 @@ function Quiz({ questions }: { questions: QuizQuestion[] }) {
       </div>
       {done && (
         <div className="mt-4 flex items-center gap-3">
-          <Mascot anim={score === questions.length ? 'celebrate' : 'think'} size={96} />
+          <Mascot anim={score === questions.length ? 'celebrate' : score * 2 < questions.length ? 'surprise' : 'think'} size={110} />
           <p className="text-2xl font-extrabold">
             {score} / {questions.length}
           </p>

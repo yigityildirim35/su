@@ -26,3 +26,4 @@ dist-ssr
 # raw mascot drawings (processed copies live in public/mascot)
 gorseller/
 .claude/
+public/mascot/placeholder/

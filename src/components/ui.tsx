@@ -28,7 +28,7 @@ export function SpeakButton({ text, size = 'md', label }: { text: string; size?:
 export function TipBox({ children, anim = 'explain' }: { children: ReactNode; anim?: MascotAnim }) {
   return (
     <div className="flex items-end gap-2">
-      <Mascot anim={anim} size={84} className="-mb-1 shrink-0" />
+      <Mascot anim={anim} size={104} className="-mb-1 shrink-0" />
       <div className="relative flex-1 rounded-2xl rounded-bl-sm border border-line bg-accent-soft p-3 text-[15px] leading-relaxed">
         {children}
       </div>
