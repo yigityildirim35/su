@@ -41,7 +41,7 @@ export function SpecialDayOverlay() {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/95 p-6 backdrop-blur" role="dialog" aria-modal="true" aria-label={tx(day.title)}>
+    <div data-special-overlay className="fixed inset-0 z-50 flex items-center justify-center bg-bg/95 p-6 backdrop-blur" role="dialog" aria-modal="true" aria-label={tx(day.title)}>
       <Confetti />
       <div className="rise relative flex max-w-sm flex-col items-center text-center">
         <Mascot anim="celebrate" size={200} />

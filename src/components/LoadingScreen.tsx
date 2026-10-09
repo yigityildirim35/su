@@ -4,6 +4,7 @@ import { Mascot } from '../mascot/Mascot'
 export function LoadingScreen({ walking, leaving }: { walking: boolean; leaving: boolean }) {
   return (
     <div
+      data-splash
       className={`fixed inset-0 z-40 flex flex-col items-center justify-center overflow-hidden bg-bg transition-opacity duration-300 ${leaving ? 'pointer-events-none opacity-0' : 'opacity-100'}`}
       aria-hidden={leaving}
     >

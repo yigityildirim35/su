@@ -4,6 +4,7 @@ import type { StringKey } from '../i18n/strings'
 import { HEAD_SRC } from '../mascot/registry'
 import { LEVELS, useSettings } from '../store/settings'
 import { Icon } from './Icon'
+import { openTour, Tour } from './Tour'
 import { LEVEL_NAMES } from './ui'
 import { WanderingMascot } from './WanderingMascot'
 
@@ -103,6 +104,15 @@ function LevelMenu() {
   )
 }
 
+function GuideButton() {
+  const { l } = useSettings()
+  return (
+    <button onClick={openTour} className="flex h-9 w-9 items-center justify-center rounded-full bg-lemon/60 text-accent transition hover:scale-105" aria-label={l('Tanıtım rehberini aç', 'Open the welcome guide')} title={l('Rehber', 'Guide')}>
+      <Icon name="lightbulb" fill size={20} />
+    </button>
+  )
+}
+
 function TopBar() {
   const { t } = useSettings()
   const current = activeTab(useLocation().pathname)
@@ -122,6 +132,7 @@ function TopBar() {
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2 md:ml-0">
+          <GuideButton />
           <LangToggle />
           <LevelMenu />
         </div>
@@ -185,6 +196,7 @@ export function Layout() {
       </div>
       <BottomBar />
       <WanderingMascot />
+      <Tour />
     </div>
   )
 }
