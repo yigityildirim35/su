@@ -8,6 +8,8 @@ const base = '/su/'
 
 export default defineConfig({
   base,
+  // Lesson content is bundled on purpose (works offline); gzip keeps it small.
+  build: { chunkSizeWarningLimit: 900 },
   plugins: [
     react(),
     tailwindcss(),

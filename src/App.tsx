@@ -20,10 +20,10 @@ import { WordsProvider } from './store/words'
 import { preloadFrames } from './mascot/preload'
 import { resolveFrames } from './mascot/registry'
 
-const WALK_MS = 2200 // one walk across the splash screen
+const WALK_MS = 1800 // two loops of the walk cycle
 const MAX_WAIT_MS = 2500 // don't hold the app hostage on a slow connection
 
-/** Splash: wait until the walk frames are decoded, let the mascot walk across once, then fade out. */
+/** Splash: wait until the walk frames are decoded, let the mascot walk in place for a moment, then fade out. */
 function useSplash() {
   const [phase, setPhase] = useState<'loading' | 'walking' | 'leaving' | 'gone'>('loading')
   useEffect(() => {

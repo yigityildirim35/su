@@ -1,4 +1,7 @@
 import type { Level } from '../store/settings'
+import { grammarA } from './grammarA'
+import { grammarB1 } from './grammarB1'
+import { grammarB2 } from './grammarB2'
 import { tenseLessons } from './tenses'
 
 type Bi = { tr: string; en: string }
@@ -34,41 +37,28 @@ export interface Lesson {
   quiz?: QuizQuestion[]
 }
 
-const soon = (level: Level, title: string, tr: string, en: string): Lesson => ({
-  id: title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-  level,
-  title,
-  subtitle: { tr, en },
-})
-
-// Lessons without sections show as "coming soon".
-const otherLessons: Lesson[] = [
-  soon('A1', 'To be (am / is / are)', 'Olmak fiili', 'The verb “to be”'),
-  soon('A1', 'There is / There are', 'Var / Yok', 'Saying what exists'),
-  soon('A1', 'A / An / The', 'Artikeller', 'Articles'),
-  soon('A1', 'Can / Can’t', 'Yetenek', 'Ability'),
-  soon('A1', 'In / On / At', 'Yer ve zaman edatları', 'Prepositions of place and time'),
-  soon('A1', 'Adverbs of Frequency', 'Sıklık zarfları', 'always, usually, never…'),
-  soon('A2', 'Comparatives & Superlatives', 'Karşılaştırma', 'bigger, the biggest'),
-  soon('A2', 'Some / Any / Much / Many', 'Sayılabilen ve sayılamayan', 'Countable and uncountable'),
-  soon('A2', 'Should / Must / Have to', 'Tavsiye ve zorunluluk', 'Advice and obligation'),
-  soon('A2', 'First Conditional', 'Gerçek koşul', 'If it rains, I’ll stay home'),
-  soon('B1', 'Present Perfect vs Past Simple', 'Hangisi ne zaman?', 'Which one when?'),
-  soon('B1', 'Used to / Would', 'Eski alışkanlıklar', 'Past habits'),
-  soon('B1', 'Second Conditional', 'Hayali koşul', 'If I won the lottery…'),
-  soon('B1', 'Passive Voice', 'Edilgen yapı', 'It was made in…'),
-  soon('B1', 'Reported Speech', 'Dolaylı anlatım', 'She said that…'),
-  soon('B1', 'Relative Clauses', 'Sıfat cümlecikleri', 'who, which, that'),
-  soon('B1', 'Gerund vs Infinitive', '-ing mi to mu?', 'enjoy doing vs want to do'),
-  soon('B1', 'Modals of Deduction', 'Tahmin', 'must, might, can’t'),
-  soon('B2', 'Third & Mixed Conditionals', 'Geçmişe dair pişmanlık', 'If I had known…'),
-  soon('B2', 'Wish / If only', 'Dilekler ve pişmanlıklar', 'Wishes and regrets'),
-  soon('B2', 'Modal Perfects', 'should have, could have', 'Past possibilities and regrets'),
-  soon('B2', 'Causative', 'Bir işi yaptırmak', 'have something done'),
-  soon('B2', 'Inversion', 'Vurgulu devrik yapı', 'Never have I ever…'),
-  soon('B2', 'Discourse Markers', 'Bağlaçlar ve geçiş ifadeleri', 'however, moreover, having said that'),
+// Curriculum order: lessons appear in this order within each level and "Next lesson" follows it.
+const ORDER = [
+  // A1
+  'to-be', 'present-simple', 'present-continuous', 'there-is-are', 'articles', 'can', 'prepositions', 'adverbs-of-frequency',
+  // A2
+  'past-simple', 'past-continuous', 'future-simple', 'present-perfect', 'comparatives-superlatives', 'some-any-much-many', 'should-must-have-to', 'first-conditional',
+  // B1
+  'present-perfect-vs-past-simple', 'present-perfect-continuous', 'past-perfect', 'used-to-would', 'second-conditional', 'passive-voice', 'reported-speech', 'relative-clauses', 'gerund-vs-infinitive', 'modals-of-deduction',
+  // B2
+  'past-perfect-continuous', 'future-continuous', 'future-perfect', 'future-perfect-continuous', 'third-mixed-conditionals', 'wish-if-only', 'modal-perfects', 'causative', 'inversion', 'discourse-markers',
 ]
 
-export const TENSE_IDS = new Set(tenseLessons.map((l) => l.id))
+const all = [...tenseLessons, ...grammarA, ...grammarB1, ...grammarB2]
+const byId = new Map(all.map((l) => [l.id, l]))
 
-export const lessons: Lesson[] = [...tenseLessons, ...otherLessons]
+export const OVERVIEW_ID = 'tenses-overview'
+
+/** Every lesson in curriculum order (the tenses overview is reached from its own card). */
+export const lessons: Lesson[] = [byId.get(OVERVIEW_ID)!, ...ORDER.map((id) => byId.get(id)!)]
+
+export function nextLesson(id: string): Lesson | undefined {
+  if (id === OVERVIEW_ID) return byId.get(ORDER[0])
+  const i = ORDER.indexOf(id)
+  return i >= 0 && i + 1 < ORDER.length ? byId.get(ORDER[i + 1]) : undefined
+}

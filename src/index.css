@@ -162,11 +162,6 @@ button { cursor: pointer; touch-action: manipulation; }
 /* Black stick-figure lines need a soft light outline to stay visible on dark backgrounds. */
 [data-theme='dark'] .mascot { filter: drop-shadow(0 0 0.6px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.45)); }
 
-/* Splash: the mascot walks from left to right across the screen. */
-@keyframes splash-walk { from { transform: translateX(-38vw); } to { transform: translateX(38vw); } }
-.splash-walk { animation: splash-walk 2.2s linear both; }
-
 /* Wandering mascot "poof" when tapped. */
 @keyframes poof { to { transform: scale(0.2) rotate(25deg); opacity: 0; } }
 .poof { animation: poof 0.35s ease-in forwards; }
-@media (prefers-reduced-motion: reduce) { [data-motion='system'] .splash-walk { animation: none; } }

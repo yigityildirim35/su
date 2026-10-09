@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageHeader } from '../components/ui'
-import { lessons } from '../content/lessons'
+import { lessons, OVERVIEW_ID } from '../content/lessons'
 import { LEVELS, useSettings, type Level } from '../store/settings'
 
 export function Lessons() {
   const { t, tx, settings } = useSettings()
   const [level, setLevel] = useState<Level>(settings.level)
-  const list = lessons.filter((l) => l.level === level && l.id !== 'tenses-overview')
+  const list = lessons.filter((l) => l.level === level && l.id !== OVERVIEW_ID)
 
   return (
     <div className="rise">
@@ -39,7 +39,7 @@ export function Lessons() {
         ))}
       </div>
 
-      <ul className="grid gap-2 md:grid-cols-2">
+      <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 [&>*]:min-w-0">
         {list.map((lesson) => {
           const ready = !!lesson.sections
           const body = (

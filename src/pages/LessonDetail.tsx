@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { EmptyState, PageHeader, SectionTitle, SpeakButton, TipBox } from '../components/ui'
-import { lessons, TENSE_IDS, type LessonSection, type QuizQuestion } from '../content/lessons'
+import { lessons, nextLesson, type LessonSection, type QuizQuestion } from '../content/lessons'
 import { Mascot } from '../mascot/Mascot'
 import type { MascotAnim } from '../mascot/registry'
 import { useSettings } from '../store/settings'
@@ -213,9 +213,7 @@ export function LessonDetail() {
   const lesson = lessons.find((l) => l.id === id)
   if (!lesson?.sections) return <EmptyState anim="read" text="…" />
 
-  // Tense lessons are a series: offer the next one at the bottom.
-  const tenses = lessons.filter((l) => TENSE_IDS.has(l.id))
-  const next = TENSE_IDS.has(lesson.id) ? tenses[tenses.findIndex((l) => l.id === lesson.id) + 1] : undefined
+  const next = nextLesson(lesson.id)
 
   return (
     <div className="rise">

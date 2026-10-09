@@ -1,6 +1,6 @@
 import { Mascot } from '../mascot/Mascot'
 
-/** First-load splash: once the frames are ready, the mascot walks across the middle of the screen. */
+/** First-load splash: once the frames are ready, the mascot walks in place in the middle of the screen. */
 export function LoadingScreen({ walking, leaving }: { walking: boolean; leaving: boolean }) {
   return (
     <div
@@ -8,11 +8,7 @@ export function LoadingScreen({ walking, leaving }: { walking: boolean; leaving:
       aria-hidden={leaving}
     >
       <div className="flex h-[170px] w-full items-end justify-center">
-        {walking && (
-          <div className="splash-walk">
-            <Mascot anim="walk" size={160} label="Loading" />
-          </div>
-        )}
+        {walking && <Mascot anim="walk" size={160} label="Loading" />}
       </div>
       <div className="mt-4 text-3xl font-extrabold text-primary">Su</div>
       <div className="mt-3 flex gap-1.5" aria-hidden>
