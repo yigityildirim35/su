@@ -64,7 +64,7 @@ export function Mascot({ anim, size = 96, loop = true, paused = false, className
       alt={label ?? ''}
       aria-hidden={label ? undefined : true}
       draggable={false}
-      className={`mascot select-none object-contain ${className}`}
+      className={`mascot max-w-none select-none object-contain ${className}`}
       // Frames are tall drawings: `size` is the figure height, width follows the image.
       style={{ height: size, width: 'auto' }}
     />

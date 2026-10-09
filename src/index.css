@@ -2,68 +2,103 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
+/* "Calm Study Notebook" design system (docs/design/DESIGN.md). */
 :root {
-  --bg: #fffbf5;
-  --surface: #ffffff;
-  --surface-2: #f6f0e8;
-  --text: #2d2a32;
-  --muted: #8a8494;
-  --border: #ede6dc;
-  --primary: #7c6fd0;
-  --primary-soft: #eeebfa;
-  --accent: #f08f74;
-  --accent-soft: #fdece6;
-  --success: #4fa874;
-  --success-soft: #e3f4e9;
-  --danger: #d86868;
-  --danger-soft: #fbe6e6;
+  --bg: #fdf9f3; /* warm paper */
+  --surface: #ffffff; /* notebook card */
+  --surface-2: #f7f3ed; /* tinted paper layer */
+  --surface-3: #f1ede7;
+  --surface-4: #ebe8e2;
+  --text: #232938; /* primary ink — English */
+  --text-2: #48454f; /* labels */
+  --muted: #6e7382; /* Turkish gloss ink */
+  --border: #e8e0d5; /* pencil guideline */
+  --outline: #cac4d0;
+  --primary: #60548b; /* lavender ink */
+  --primary-2: #8b7eb8; /* soft lavender */
+  --primary-soft: #e7deff;
+  --on-primary: #ffffff;
+  --success: #44664a; /* sage */
+  --success-soft: #c3e9c5;
+  --accent: #964327; /* terracotta / coral ink */
+  --accent-2: #f48c6a; /* peach */
+  --accent-soft: #ffdbd0;
+  --danger: #ba1a1a;
+  --danger-soft: #ffdad6;
+  --lemon: #fde68a;
+  --sky: #a5c4d4;
+  --shadow-1: 0 3px 12px -2px rgba(35, 41, 56, 0.04), 0 1px 3px 0 rgba(35, 41, 56, 0.02);
+  --shadow-2: 0 10px 24px -4px rgba(139, 126, 184, 0.12), 0 4px 8px -2px rgba(35, 41, 56, 0.04);
   color-scheme: light;
 }
 
 [data-theme='dark'] {
-  --bg: #1c1b26;
-  --surface: #252433;
-  --surface-2: #2e2d3e;
-  --text: #edeaf5;
-  --muted: #9b97ab;
-  --border: #363548;
-  --primary: #a79beb;
-  --primary-soft: #33304a;
-  --accent: #f2a890;
-  --accent-soft: #3d2f31;
-  --success: #7cc99a;
-  --success-soft: #24372c;
-  --danger: #ec8e8e;
-  --danger-soft: #3d2729;
+  --bg: #17161d;
+  --surface: #211f29;
+  --surface-2: #292732;
+  --surface-3: #302e3a;
+  --surface-4: #383543;
+  --text: #ece8f4;
+  --text-2: #cac4d0;
+  --muted: #a3a0b0;
+  --border: #36333f;
+  --outline: #4a4656;
+  --primary: #ccbefc;
+  --primary-2: #a99be0;
+  --primary-soft: #3a3254;
+  --on-primary: #1e1146;
+  --success: #aad0ad;
+  --success-soft: #2d4e33;
+  --accent: #ffb59d;
+  --accent-2: #f48c6a;
+  --accent-soft: #5a2c1d;
+  --danger: #ffb4ab;
+  --danger-soft: #5c1d18;
+  --lemon: #6b5a1c;
+  --sky: #2f4a57;
+  --shadow-1: 0 2px 10px -2px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 10px 24px -4px rgba(0, 0, 0, 0.45);
   color-scheme: dark;
 }
 
 /* Special-day accents: only colors change, never layout. */
-[data-special='birthday'] { --accent: #ec7fb0; --accent-soft: #fce7f1; }
-[data-special='newyear'] { --accent: #d9a83a; --accent-soft: #fbf3dc; }
+[data-special='birthday'] { --accent-2: #ec7fb0; --accent-soft: #fce7f1; }
+[data-special='newyear'] { --accent-2: #d9a83a; --accent-soft: #fbf3dc; }
 [data-special='april23'],
 [data-special='may19'],
-[data-special='oct29'] { --accent: #e0464f; --accent-soft: #fbe3e4; }
-[data-special='kurban'] { --accent: #4fa874; --accent-soft: #e3f4e9; }
-[data-special='summer'] { --accent: #f0a53a; --accent-soft: #fdf0dc; }
-[data-theme='dark'][data-special] { --accent-soft: #3a3238; }
+[data-special='oct29'] { --accent-2: #e0464f; --accent-soft: #fbe3e4; }
+[data-special='kurban'] { --accent-2: #5f8f66; --accent-soft: #dcefdd; }
+[data-special='summer'] { --accent-2: #f0a53a; --accent-soft: #fdf0dc; }
+[data-theme='dark'][data-special] { --accent-soft: #3d3138; }
 
 @theme inline {
-  --font-sans: 'Nunito', ui-rounded, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Nunito Sans', 'Nunito', ui-rounded, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Quicksand', 'Nunito Sans', ui-rounded, system-ui, sans-serif;
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-surface-4: var(--surface-4);
   --color-text: var(--text);
+  --color-text-2: var(--text-2);
   --color-muted: var(--muted);
   --color-line: var(--border);
+  --color-outline: var(--outline);
   --color-primary: var(--primary);
+  --color-primary-2: var(--primary-2);
   --color-primary-soft: var(--primary-soft);
+  --color-on-primary: var(--on-primary);
   --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
   --color-accent-soft: var(--accent-soft);
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
+  --color-lemon: var(--lemon);
+  --color-sky: var(--sky);
+  --shadow-card: var(--shadow-1);
+  --shadow-lift: var(--shadow-2);
 }
 
 html {
@@ -77,83 +112,179 @@ body {
   color: var(--text);
   font-family: var(--font-sans);
   font-size: 16px;
-  line-height: 1.55;
+  line-height: 1.5;
   overscroll-behavior-y: none;
 }
 
+h1, h2, h3, .font-display { font-family: var(--font-display); }
+
 button { cursor: pointer; touch-action: manipulation; }
-:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 8px; }
+:focus-visible { outline: 2px solid var(--primary-2); outline-offset: 2px; border-radius: 10px; }
 
 .pt-safe { padding-top: env(safe-area-inset-top); }
 .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
 
+/* Material Symbols (subset loaded in index.html). */
+.icon {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  user-select: none;
+  flex-shrink: 0;
+}
+.icon-fill { font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24; }
+
 /* In the components layer so Tailwind utilities (p-0, rounded-…) can still override them. */
 @layer components {
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 1rem;
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 1.25rem;
+    box-shadow: var(--shadow-1);
+  }
+  @media (min-width: 640px) { .card { padding: 1.5rem; } }
+
+  /* Tinted "paper" panel, used for notes, tips and quotes. */
+  .paper {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 1.25rem;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    border-radius: 999px;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.2;
+    background: var(--surface-3);
+    color: var(--text-2);
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .chip[aria-pressed='true'] { background: var(--primary); color: var(--on-primary); }
+
+  /* Small label pills (part of speech, level, status). */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    background: var(--surface-3);
+    color: var(--text-2);
+    white-space: nowrap;
+  }
+  .tag-lav { background: var(--primary-soft); color: var(--primary); }
+  .tag-sage { background: var(--success-soft); color: var(--success); }
+  .tag-peach { background: var(--accent-soft); color: var(--accent); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 48px;
+    padding: 0 1.25rem;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    transition: transform 0.12s ease, background-color 0.15s ease, opacity 0.12s ease;
+    white-space: nowrap;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled { opacity: 0.5; pointer-events: none; }
+  .btn-primary { background: var(--primary); color: var(--on-primary); box-shadow: 0 6px 16px -6px rgba(96, 84, 139, 0.45); }
+  .btn-primary:hover { background: color-mix(in srgb, var(--primary) 88%, black); }
+  .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--accent-2); }
+  .btn-soft { background: var(--primary-soft); color: var(--primary); }
+  .btn-ghost { background: transparent; color: var(--success); }
+
+  .input {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.7rem 1rem;
+    border-radius: 16px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 16px; /* prevents iOS zoom on focus */
+  }
+  .input:focus { outline: none; border-color: var(--primary-2); background: var(--surface); }
+  .input::placeholder { color: var(--muted); }
+
+  /* Section heading with a little coloured dot, as in the design. */
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .section-title::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--dot, var(--primary-2));
+    flex-shrink: 0;
+  }
+
+  .eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  /* Organic "pebble" frame for the mascot. */
+  .pebble { border-radius: 60% 40% 50% 50% / 50% 50% 60% 40%; }
 }
 
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  border-radius: 999px;
-  padding: 0.25rem 0.75rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  background: var(--surface-2);
-  color: var(--text);
-  border: 1px solid transparent;
-}
-.chip[aria-pressed='true'] { background: var(--primary-soft); color: var(--primary); border-color: var(--primary); }
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  min-height: 48px;
-  padding: 0 1.25rem;
-  border-radius: 16px;
-  font-weight: 700;
-  transition: transform 0.12s ease, opacity 0.12s ease;
-}
-.btn:active { transform: scale(0.97); }
-.btn:disabled { opacity: 0.5; }
-.btn-primary { background: var(--primary); color: #fff; }
-[data-theme='dark'] .btn-primary { color: #1c1b26; }
-.btn-soft { background: var(--primary-soft); color: var(--primary); }
-.btn-ghost { background: transparent; color: var(--muted); }
-
-.input {
-  width: 100%;
-  min-height: 48px;
-  padding: 0.6rem 0.9rem;
-  border-radius: 14px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-size: 16px; /* prevents iOS zoom on focus */
-}
-.input:focus { outline: none; border-color: var(--primary); }
-}
-
-.en { color: var(--primary); font-weight: 600; }
+.en { color: var(--text); font-weight: 600; }
+.tr { color: var(--muted); font-weight: 400; }
 
 @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 /* "backwards" so no transform lingers — a lingering transform would trap position:fixed children. */
 .rise { animation: rise 0.35s ease backwards; }
 
 @keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
-.sheet-up { animation: sheet-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.sheet-up { animation: sheet-up 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+@keyframes pop-in { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: none; } }
+@media (min-width: 768px) { .sheet-up { animation-name: pop-in; } }
 
 @keyframes confetti-fall {
   from { transform: translateY(-10vh) rotate(0deg); }
   to { transform: translateY(110vh) rotate(540deg); }
 }
+
+/* Flashcard flip. */
+.flip-scene { perspective: 1400px; }
+.flip-card { transition: transform 0.5s cubic-bezier(0.3, 0.7, 0.2, 1); transform-style: preserve-3d; }
+.flip-card.flipped { transform: rotateY(180deg); }
+.flip-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.flip-back { transform: rotateY(180deg); }
 
 @media (prefers-reduced-motion: reduce) {
   [data-motion='system'] *, [data-motion='system'] *::before, [data-motion='system'] *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
@@ -165,3 +296,6 @@ button { cursor: pointer; touch-action: manipulation; }
 /* Wandering mascot "poof" when tapped. */
 @keyframes poof { to { transform: scale(0.2) rotate(25deg); opacity: 0; } }
 .poof { animation: poof 0.35s ease-in forwards; }
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }

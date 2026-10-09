@@ -103,3 +103,40 @@ export const streetCategories: StreetCategory[] = [
     ],
   },
 ]
+
+/** Stiff textbook phrases next to what people actually say. */
+export const textbookVsStreet: { book: string; street: string; tr: string }[] = [
+  { book: 'How are you doing today?', street: 'You alright? / How’s it going?', tr: 'Selamlaşma — gerçek bir soru değil.' },
+  { book: 'Yes, that is completely fine.', street: 'Sure, no worries! / Sounds good.', tr: 'Rahat bir “tamam”.' },
+  { book: 'I would like to have a coffee, please.', street: 'Can I get a flat white, please?', tr: 'Siparişte “Can I get…” çok yaygın.' },
+  { book: 'I am extremely tired.', street: 'I’m knackered. (UK) / I’m beat. (US)', tr: 'Çok yorgunum.' },
+  { book: 'It is raining very hard.', street: 'It’s pouring (down)!', tr: 'Bardaktan boşanırcasına yağıyor.' },
+  { book: 'Thank you very much.', street: 'Cheers! (UK) / Thanks a lot!', tr: 'Teşekkürler — gündelik.' },
+  { book: 'I do not understand.', street: 'Sorry, I didn’t catch that.', tr: 'Duyamadım / anlayamadım.' },
+  { book: 'Goodbye, see you later.', street: 'Catch you later! / Take care!', tr: 'Görüşürüz!' },
+]
+
+/** Quick “what would you say?” checks. */
+export const streetCheckpoints: { situation: { tr: string; en: string }; prompt: string; options: string[]; answer: number; why: { tr: string; en: string } }[] = [
+  {
+    situation: { tr: 'Barista kahveni uzatıp gülümsüyor:', en: 'The barista hands over your coffee with a smile:' },
+    prompt: '“There you go, enjoy!”',
+    options: ['“I am grateful for your kind assistance.”', '“Cheers, have a good one!”', '“My physical health is very well today.”'],
+    answer: 1,
+    why: { tr: 'Kısa ve sıcak bir “teşekkürler, iyi günler” — tam yerinde.', en: 'A short, warm thanks — exactly right.' },
+  },
+  {
+    situation: { tr: 'Bir arkadaşın sokakta sana sesleniyor:', en: 'A friend calls out to you on the street:' },
+    prompt: '“Hey! How’s it going?”',
+    options: ['“Not bad, you?”', '“I am going to the supermarket.”', '“It is going at 5 km per hour.”'],
+    answer: 0,
+    why: { tr: '“How’s it going?” bir selam; kısa bir cevap ve soruyu geri sormak yeterli.', en: 'It’s a greeting; a short reply and asking back is enough.' },
+  },
+  {
+    situation: { tr: 'Bir şeyi duyamadın, karşındaki tekrar etsin istiyorsun:', en: 'You didn’t hear something and want it repeated:' },
+    prompt: '…',
+    options: ['“Repeat.”', '“Sorry, I didn’t catch that.”', '“Your voice is insufficient.”'],
+    answer: 1,
+    why: { tr: 'Kibar ve doğal; yerliler hep bunu kullanır.', en: 'Polite and natural — what natives say.' },
+  },
+]

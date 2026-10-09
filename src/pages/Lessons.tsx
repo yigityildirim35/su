@@ -1,68 +1,67 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { PageHeader } from '../components/ui'
+import { Link, useSearchParams } from 'react-router-dom'
+import { Icon } from '../components/Icon'
+import { LEVEL_NAMES, PageHeader, Segmented } from '../components/ui'
 import { lessons, OVERVIEW_ID } from '../content/lessons'
+import { tenseLessons } from '../content/tenses'
 import { LEVELS, useSettings, type Level } from '../store/settings'
 
+const TENSE_IDS = new Set(tenseLessons.map((t) => t.id))
+
 export function Lessons() {
-  const { t, tx, settings } = useSettings()
-  const [level, setLevel] = useState<Level>(settings.level)
-  const list = lessons.filter((l) => l.level === level && l.id !== OVERVIEW_ID)
+  const { l, tx, settings } = useSettings()
+  const [params, setParams] = useSearchParams()
+  const fromUrl = params.get('level') as Level | null
+  const level: Level = fromUrl && LEVELS.includes(fromUrl) ? fromUrl : settings.level
+  const list = lessons.filter((x) => x.level === level && x.id !== OVERVIEW_ID)
 
   return (
     <div className="rise">
-      <PageHeader title={t('lessons.title')} />
+      <PageHeader title={l('Konular', 'Lessons')} subtitle={l('A1’den B2’ye, kısa ve akılda kalıcı anlatımlar.', 'Short, memorable lessons from A1 to B2.')} />
 
-      <Link to="/lessons/tenses-overview" className="card mb-3 flex items-center gap-3 bg-primary-soft">
-        <span className="text-3xl">🕰️</span>
-        <div className="flex-1">
-          <p className="font-bold text-primary">{t('lessons.tenses')}</p>
-          <p className="text-sm text-muted">{t('lessons.tensesSub')}</p>
-        </div>
-        <span className="text-primary">→</span>
-      </Link>
-
-      <Link to="/street" className="card mb-4 flex items-center gap-3 bg-accent-soft">
-        <span className="text-3xl">🗣️</span>
-        <div className="flex-1">
-          <p className="font-bold">{t('lessons.street')}</p>
-          <p className="text-sm text-muted">{t('lessons.streetSub')}</p>
-        </div>
-        <span className="text-muted">→</span>
-      </Link>
-
-      <div className="mb-4 grid grid-cols-4 gap-1 rounded-2xl bg-surface-2 p-1">
-        {LEVELS.map((l) => (
-          <button key={l} className={`min-h-10 rounded-xl font-bold transition ${level === l ? 'bg-surface text-primary shadow-sm' : 'text-muted'}`} onClick={() => setLevel(l)}>
-            {l}
-          </button>
-        ))}
+      <div className="grid gap-3 sm:grid-cols-2">
+        <Link to={`/lessons/${OVERVIEW_ID}`} className="card flex items-center gap-4 bg-primary-soft/40 p-4 transition hover:shadow-lift">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary text-on-primary">
+            <Icon name="history_edu" size={26} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="font-display text-lg font-bold text-primary">{l('12 Zaman', 'The 12 Tenses')}</p>
+            <p className="text-[13px] text-text-2">{l('Bütün zamanlar tek tabloda', 'All tenses on one page')}</p>
+          </div>
+          <Icon name="arrow_forward" className="text-primary" />
+        </Link>
+        <Link to="/street" className="card flex items-center gap-4 bg-accent-soft/40 p-4 transition hover:shadow-lift">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-soft text-accent">
+            <Icon name="forum" size={26} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="font-display text-lg font-bold text-accent">{l('Sokak İngilizcesi', 'Street English')}</p>
+            <p className="text-[13px] text-text-2">{l('Yerliler gerçekte nasıl konuşuyor?', 'How native speakers really talk')}</p>
+          </div>
+          <Icon name="arrow_forward" className="text-accent" />
+        </Link>
       </div>
 
-      <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 [&>*]:min-w-0">
-        {list.map((lesson) => {
-          const ready = !!lesson.sections
-          const body = (
-            <>
+      <Segmented className="mt-6" value={level} onChange={(lv) => setParams({ level: lv }, { replace: true })} options={LEVELS.map((lv) => ({ value: lv, label: lv }))} />
+      <p className="eyebrow mb-3 mt-5 text-muted">
+        {level} · {tx(LEVEL_NAMES[level])} · {l(`${list.length} konu`, `${list.length} lessons`)}
+      </p>
+
+      <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 [&>*]:min-w-0">
+        {list.map((lesson, i) => (
+          <li key={lesson.id}>
+            <Link to={`/lessons/${lesson.id}`} className="card flex h-full items-center gap-3 p-4 transition hover:-translate-y-0.5 hover:shadow-lift">
+              <span className="font-display flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-3 text-sm font-bold text-primary">{i + 1}</span>
               <div className="min-w-0 flex-1">
-                <p className="font-bold">{lesson.title}</p>
-                <p className="truncate text-sm text-muted">{tx(lesson.subtitle)}</p>
+                <p className="flex items-center gap-2 font-bold">
+                  <span className="truncate">{lesson.title}</span>
+                  {TENSE_IDS.has(lesson.id) && <span className="tag tag-lav shrink-0">{l('Zaman', 'Tense')}</span>}
+                </p>
+                <p className="truncate text-[13px] text-muted">{tx(lesson.subtitle)}</p>
               </div>
-              {ready ? <span className="text-primary">→</span> : <span className="chip text-xs text-muted">{t('lessons.soon')}</span>}
-            </>
-          )
-          return (
-            <li key={lesson.id}>
-              {ready ? (
-                <Link to={`/lessons/${lesson.id}`} className="card flex min-h-16 items-center gap-3 active:scale-[0.99]">
-                  {body}
-                </Link>
-              ) : (
-                <div className="card flex min-h-16 items-center gap-3 opacity-60">{body}</div>
-              )}
-            </li>
-          )
-        })}
+              <Icon name="chevron_right" className="text-outline" />
+            </Link>
+          </li>
+        ))}
       </ul>
     </div>
   )

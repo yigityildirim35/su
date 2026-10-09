@@ -48,7 +48,7 @@ export function SpecialDayOverlay() {
         <div className="mt-2 text-6xl" aria-hidden>
           {day.emoji}
         </div>
-        <h1 className="mt-3 text-3xl font-extrabold text-accent">{day.title.en}</h1>
+        <h1 className="mt-3 text-[34px] font-bold text-accent-2">{day.title.en}</h1>
         <p className="mt-1 text-lg font-bold">{day.title.tr}</p>
         <p className="mt-3 text-muted">{tx(day.message)}</p>
         <button className="btn btn-primary mt-6 w-full" onClick={close}>

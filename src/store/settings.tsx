@@ -25,6 +25,10 @@ interface SettingsContextValue {
   t: (key: StringKey) => string
   /** Picks the TR or EN variant of a bilingual content field. */
   tx: (text: { tr: string; en: string }) => string
+  /** Inline bilingual text: l('Merhaba', 'Hello'). */
+  l: (tr: string, en: string) => string
+  /** The theme actually shown (system preference resolved). */
+  resolvedTheme: 'light' | 'dark'
 }
 
 const SettingsContext = createContext<SettingsContextValue | null>(null)
@@ -55,7 +59,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     document.documentElement.dataset.theme = resolvedTheme
     document.documentElement.lang = settings.lang
     document.documentElement.dataset.motion = settings.motion
-    document.querySelectorAll('meta[name="theme-color"]').forEach((m) => m.setAttribute('content', resolvedTheme === 'dark' ? '#1C1B26' : '#FFFBF5'))
+    document.querySelectorAll('meta[name="theme-color"]').forEach((m) => m.setAttribute('content', resolvedTheme === 'dark' ? '#17161D' : '#FDF9F3'))
   }, [resolvedTheme, settings.lang, settings.motion])
 
   const value = useMemo<SettingsContextValue>(
@@ -64,8 +68,10 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       update: (patch) => setSettings((s) => ({ ...s, ...patch })),
       t: (key) => strings[settings.lang][key],
       tx: (text) => text[settings.lang],
+      l: (tr, en) => (settings.lang === 'tr' ? tr : en),
+      resolvedTheme,
     }),
-    [settings],
+    [settings, resolvedTheme],
   )
 
   return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>

@@ -21,6 +21,9 @@ ICONS = ROOT / "public" / "icons"
 TARGET_HEIGHT = 640  # px height of the tallest frame in a group
 BG_COLOR = (255, 251, 245)  # --bg, used for opaque app icons
 
+# Drawings with a hat/accessory on top of the head: don't trim "strands" above the hair.
+HATS = {"newyear-celebrate"}
+
 # animation name -> source files in play order
 GROUPS = {
     "idle": ["normal.png"],
@@ -77,8 +80,58 @@ def remove_guide_lines(rgb: np.ndarray) -> np.ndarray:
     return rgb
 
 
-def to_rgba(rgb: np.ndarray) -> np.ndarray:
-    """White background connected to the image border becomes transparent; edges get soft alpha."""
+def stray_hair_lines(rgb: np.ndarray, lum: np.ndarray, whiteish: np.ndarray, labels: np.ndarray, background: np.ndarray) -> np.ndarray:
+    """The drawings have a loose outer outline on both sides of the hair, separated from it by a white gap.
+
+    Finds those gaps (enclosed white areas surrounded by black outline, with no skin around them — unlike
+    eyes and teeth) and returns them plus the thin outer line, so both become transparent.
+    """
+    r, g, b = (rgb[:, :, i].astype(int) for i in range(3))
+    skin = (r > 200) & (g > 150) & (b > 120) & (r - b > 30) & ~whiteish
+    dark_ring = lum < 110  # outline + hair around a gap (teeth/eyes have lips/skin around them)
+    min_size = whiteish.size * 0.00012
+    k = max(whiteish.shape) / 900  # distances below are tuned for ~900px drawings; scale for bigger ones
+    px = lambda n: max(1, round(n * k))  # noqa: E731
+
+    # Gaps hug the silhouette; eyes and teeth sit deep inside the face.
+    near_outside = ndimage.binary_dilation(background, iterations=px(14))
+
+    gaps = np.zeros_like(whiteish)
+    for i in range(1, labels.max() + 1):
+        region = labels == i
+        if background[region].any() or region.sum() < min_size or not (region & near_outside).any():
+            continue
+        ring = ndimage.binary_dilation(region, iterations=4) & ~region
+        if (skin & ring).sum() < 0.05 * ring.sum() and (dark_ring & ring).sum() >= 0.65 * ring.sum():
+            gaps |= region
+    if not gaps.any():
+        return gaps
+
+    # The loose line sits between a gap and the outside; the hair's own edge (next to the brown fill) stays.
+    hair_fill = (lum < 120) & (r - b > 8)
+    dark = lum < 150
+    loose = dark & ndimage.binary_dilation(gaps, iterations=px(22)) & ndimage.binary_dilation(background | gaps, iterations=px(6))
+    loose &= ~ndimage.binary_dilation(hair_fill, iterations=px(3))
+    return gaps | loose
+
+
+def hair_wisps_on_top(rgb: np.ndarray, lum: np.ndarray) -> np.ndarray:
+    """Dark strokes sitting clearly above the top of the hair in their column (a stray curl on the head)."""
+    r, b = rgb[:, :, 0].astype(int), rgb[:, :, 2].astype(int)
+    hair_fill = (lum < 120) & (r - b > 8)
+    h, w = lum.shape
+    has_hair = hair_fill.any(axis=0)
+    top = np.where(has_hair, hair_fill.argmax(axis=0), h)
+    margin = max(6, h // 120)  # the hair's own outline is a few pixels thick
+    rows = np.arange(h)[:, None]
+    return (lum < 150) & has_hair[None, :] & (rows < (top - margin)[None, :])
+
+
+def to_rgba(rgb: np.ndarray, trim_top_wisps: bool = True) -> np.ndarray:
+    """White background connected to the image border becomes transparent; edges get soft alpha.
+
+    `trim_top_wisps` removes loose hair strands above the head (off for drawings with a hat on top).
+    """
     lum = rgb.mean(axis=2)
     whiteish = lum > 232
     labels, _ = ndimage.label(whiteish)
@@ -88,19 +141,25 @@ def to_rgba(rgb: np.ndarray) -> np.ndarray:
     sizes = ndimage.sum(whiteish, labels, range(1, labels.max() + 1))
     big = np.where(sizes > whiteish.size * 0.0028)[0] + 1  # tuned: eye whites of the surprised face stay below this
     background |= np.isin(labels, big)
+    background |= stray_hair_lines(rgb, lum, whiteish, labels, background)
+    if trim_top_wisps:
+        background |= hair_wisps_on_top(rgb, lum)
 
     alpha = np.where(background, 0, 255).astype(np.float32)
     # Soften the 2px rim next to the background so there is no white halo on dark mode.
     rim = ndimage.binary_dilation(background, iterations=2) & ~background
     alpha[rim] = np.clip((255 - lum[rim]) * 2.2, 0, 255)
 
-    # Drop tiny specks left from erased lines.
+    # Drop specks and loose dark line pieces that are no longer attached to the figure.
+    # Colourful detached pieces (fireworks, confetti) are kept.
     solid = alpha > 40
     labels, n = ndimage.label(solid)
     if n:
         sizes = ndimage.sum(solid, labels, range(1, n + 1))
-        tiny = np.isin(labels, np.where(sizes < 12)[0] + 1)
-        alpha[tiny] = 0
+        darkness = ndimage.mean(lum < 110, labels, range(1, n + 1))
+        main = sizes.max()
+        drop = [i + 1 for i in range(n) if sizes[i] < 12 or (sizes[i] < main * 0.01 and darkness[i] > 0.6)]
+        alpha[np.isin(labels, drop)] = 0
 
     return np.dstack([rgb.astype(np.uint8), alpha.astype(np.uint8)])
 
@@ -113,7 +172,7 @@ def bbox(rgba: np.ndarray):
 def process_group(name: str, files: list[str]):
     frames = []
     for f in files:
-        rgba = to_rgba(remove_guide_lines(load_rgb(SRC / f)))
+        rgba = to_rgba(remove_guide_lines(load_rgb(SRC / f)), trim_top_wisps=name not in HATS)
         y0, y1, x0, x1 = bbox(rgba)
         crop = rgba[y0:y1, x0:x1]
         # Horizontal anchor = median x of the drawing, so the figure doesn't jitter between frames.

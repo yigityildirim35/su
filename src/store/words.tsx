@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { SEED_VERSION, seedWords } from '../content/words.seed'
-import { newSrs, review, type SrsState } from '../lib/srs'
+import { dayKey } from '../lib/date'
+import { newSrs, review, type Rating, type SrsState } from '../lib/srs'
 import { load, save } from '../lib/storage'
 import type { Level } from './settings'
 
@@ -18,6 +19,11 @@ export interface Word {
   tags: string[]
   /** A verified line from a movie/series where the word appears. */
   media?: { title: string; line: string; source?: string }
+  /** Personal memory hook (“Kişisel hatırlatıcı”). */
+  note?: string
+  /** Where the word was caught: book, street, podcast, movie, video, lesson. */
+  source?: string
+  starred?: boolean
   createdAt: number
   srs: SrsState
 }
@@ -33,7 +39,9 @@ interface WordsContextValue {
   add: (input: WordInput) => Word
   updateWord: (id: string, patch: Partial<WordInput>) => void
   remove: (id: string) => void
-  grade: (id: string, remembered: boolean) => void
+  grade: (id: string, rating: Rating) => void
+  /** Puts a word back into today's review queue. */
+  markDue: (id: string) => void
   importWords: (incoming: Word[]) => number
   findByText: (text: string) => Word | undefined
 }
@@ -75,7 +83,8 @@ export function WordsProvider({ children }: { children: ReactNode }) {
       },
       updateWord: (id, patch) => setWords((ws) => ws.map((w) => (w.id === id ? { ...w, ...patch } : w))),
       remove: (id) => setWords((ws) => ws.filter((w) => w.id !== id)),
-      grade: (id, remembered) => setWords((ws) => ws.map((w) => (w.id === id ? { ...w, srs: review(w.srs, remembered) } : w))),
+      grade: (id, rating) => setWords((ws) => ws.map((w) => (w.id === id ? { ...w, srs: review(w.srs, rating) } : w))),
+      markDue: (id) => setWords((ws) => ws.map((w) => (w.id === id ? { ...w, srs: { ...w.srs, due: dayKey() } } : w))),
       importWords: (incoming) => {
         const existing = new Set(words.map((w) => normalize(w.word)))
         const fresh = incoming
