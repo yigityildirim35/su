@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import type { StringKey } from '../i18n/strings'
 import { HEAD_SRC } from '../mascot/registry'
 import { LEVELS, useSettings } from '../store/settings'
+import { WanderingMascot } from './WanderingMascot'
 
 const TABS: { to: string; key: StringKey; icon: string }[] = [
   { to: '/', key: 'nav.today', icon: '☀️' },
@@ -111,6 +112,7 @@ export function Layout() {
           <Outlet />
         </main>
         <TabBar />
+        <WanderingMascot />
       </div>
     </div>
   )

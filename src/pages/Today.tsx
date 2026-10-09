@@ -7,8 +7,12 @@ import { channels, videoPicks } from '../content/videos'
 import { pickForDay } from '../lib/date'
 import { isDue } from '../lib/srs'
 import { Mascot } from '../mascot/Mascot'
+import type { MascotAnim } from '../mascot/registry'
 import { useSettings } from '../store/settings'
 import { useWords } from '../store/words'
+
+// A different greeting pose each day.
+const GREETINGS: MascotAnim[] = ['wave', 'idle', 'celebrate', 'think']
 
 export function Today() {
   const { t, tx, settings } = useSettings()
@@ -22,7 +26,7 @@ export function Today() {
   return (
     <div className="rise space-y-4">
       <div className="flex items-center gap-3">
-        <Mascot anim="wave" size={88} />
+        <Mascot anim={special ? 'wave' : (pickForDay(GREETINGS, 1) ?? 'wave')} size={96} />
         <div>
           <h1 className="text-2xl font-extrabold">{special ? `${special.emoji} ${tx(special.title)}` : t('today.hello')}</h1>
           <p className="text-muted">{special ? tx(special.message) : t('today.subtitle')}</p>

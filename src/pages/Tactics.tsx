@@ -16,7 +16,7 @@ export function Tactics() {
               <span className="text-muted transition group-open:rotate-180">⌄</span>
             </summary>
             <div className="mt-3">
-              <TipBox>{tx(tactic.body)}</TipBox>
+              <TipBox anim={(['explain', 'think', 'idle', 'celebrate', 'surprise'] as const)[i % 5]}>{tx(tactic.body)}</TipBox>
               {tactic.example && (
                 <p className="en mt-3 flex items-center gap-2 italic">
                   <span className="flex-1">“{tactic.example}”</span>

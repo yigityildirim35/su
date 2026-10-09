@@ -92,6 +92,14 @@ export function More() {
             </button>
           ))}
         </Row>
+        <Row label={t('settings.motion')}>
+          <button className="chip min-h-10" aria-pressed={settings.motion === 'on'} onClick={() => update({ motion: 'on' })}>
+            {t('settings.on')}
+          </button>
+          <button className="chip min-h-10" aria-pressed={settings.motion === 'system'} onClick={() => update({ motion: 'system' })}>
+            {t('settings.motionSystem')}
+          </button>
+        </Row>
         <Row label={t('settings.specialDays')}>
           <button className="chip min-h-10" aria-pressed={settings.specialDays} onClick={() => update({ specialDays: true })}>
             {t('settings.on')}

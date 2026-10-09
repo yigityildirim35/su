@@ -20,7 +20,7 @@ export function Street() {
       </div>
 
       <div className="my-4">
-        <TipBox>{tx(cat.intro)}</TipBox>
+        <TipBox anim="think">{tx(cat.intro)}</TipBox>
       </div>
 
       {cat.items && (

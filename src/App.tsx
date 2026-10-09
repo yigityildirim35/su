@@ -17,17 +17,30 @@ import { WordDetail } from './pages/WordDetail'
 import { Words } from './pages/Words'
 import { SettingsProvider } from './store/settings'
 import { WordsProvider } from './store/words'
+import { preloadFrames } from './mascot/preload'
+import { resolveFrames } from './mascot/registry'
 
-const SPLASH_MS = 1400
+const WALK_MS = 2200 // one walk across the splash screen
+const MAX_WAIT_MS = 2500 // don't hold the app hostage on a slow connection
 
+/** Splash: wait until the walk frames are decoded, let the mascot walk across once, then fade out. */
 function useSplash() {
-  const [phase, setPhase] = useState<'show' | 'leaving' | 'gone'>('show')
+  const [phase, setPhase] = useState<'loading' | 'walking' | 'leaving' | 'gone'>('loading')
   useEffect(() => {
-    const leave = window.setTimeout(() => setPhase('leaving'), SPLASH_MS)
-    const gone = window.setTimeout(() => setPhase('gone'), SPLASH_MS + 300)
+    let alive = true
+    const timers: number[] = []
+    const startWalk = () => {
+      if (!alive) return
+      alive = false
+      setPhase('walking')
+      timers.push(window.setTimeout(() => setPhase('leaving'), WALK_MS))
+      timers.push(window.setTimeout(() => setPhase('gone'), WALK_MS + 300))
+    }
+    preloadFrames(resolveFrames('walk').frames).then(startWalk)
+    timers.push(window.setTimeout(startWalk, MAX_WAIT_MS))
     return () => {
-      window.clearTimeout(leave)
-      window.clearTimeout(gone)
+      alive = false
+      timers.forEach(window.clearTimeout)
     }
   }, [])
   return phase
@@ -58,7 +71,7 @@ export default function App() {
               </Route>
             </Routes>
           </HashRouter>
-          {splash !== 'gone' && <LoadingScreen leaving={splash === 'leaving'} />}
+          {splash !== 'gone' && <LoadingScreen walking={splash !== 'loading'} leaving={splash === 'leaving'} />}
           {splash === 'gone' && <SpecialDayOverlay />}
         </WordsProvider>
       </SpecialDayProvider>

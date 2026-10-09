@@ -12,9 +12,11 @@ export interface Settings {
   accent: Accent
   theme: 'light' | 'dark' | 'system'
   specialDays: boolean
+  /** 'on' = always animate the mascot; 'system' = follow the device's reduce-motion setting. */
+  motion: 'on' | 'system'
 }
 
-const DEFAULTS: Settings = { level: 'A1', lang: 'tr', accent: 'en-US', theme: 'system', specialDays: true }
+const DEFAULTS: Settings = { level: 'A1', lang: 'tr', accent: 'en-US', theme: 'system', specialDays: true, motion: 'on' }
 const KEY = 'su.settings'
 
 interface SettingsContextValue {
@@ -52,8 +54,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.documentElement.dataset.theme = resolvedTheme
     document.documentElement.lang = settings.lang
+    document.documentElement.dataset.motion = settings.motion
     document.querySelectorAll('meta[name="theme-color"]').forEach((m) => m.setAttribute('content', resolvedTheme === 'dark' ? '#1C1B26' : '#FFFBF5'))
-  }, [resolvedTheme, settings.lang])
+  }, [resolvedTheme, settings.lang, settings.motion])
 
   const value = useMemo<SettingsContextValue>(
     () => ({

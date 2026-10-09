@@ -3,15 +3,18 @@ import { Link, useParams } from 'react-router-dom'
 import { EmptyState, PageHeader, SectionTitle, SpeakButton, TipBox } from '../components/ui'
 import { lessons, TENSE_IDS, type LessonSection, type QuizQuestion } from '../content/lessons'
 import { Mascot } from '../mascot/Mascot'
+import type { MascotAnim } from '../mascot/registry'
 import { useSettings } from '../store/settings'
 
-function Section({ section }: { section: LessonSection }) {
+const TIP_POSES: MascotAnim[] = ['explain', 'think', 'idle', 'surprise']
+
+function Section({ section, tipIndex }: { section: LessonSection; tipIndex: number }) {
   const { t, tx } = useSettings()
   switch (section.kind) {
     case 'tip':
       return (
         <div className="my-5">
-          <TipBox>{tx(section.text)}</TipBox>
+          <TipBox anim={TIP_POSES[tipIndex % TIP_POSES.length]}>{tx(section.text)}</TipBox>
         </div>
       )
     case 'structure':
@@ -219,7 +222,7 @@ export function LessonDetail() {
       <PageHeader title={lesson.title} back="/lessons" />
       <p className="-mt-3 mb-2 text-muted">{tx(lesson.subtitle)}</p>
       {lesson.sections.map((s, i) => (
-        <Section key={i} section={s} />
+        <Section key={i} section={s} tipIndex={lesson.sections!.slice(0, i).filter((x) => x.kind === 'tip').length} />
       ))}
       {lesson.quiz && <Quiz key={lesson.id} questions={lesson.quiz} />}
       {next && (

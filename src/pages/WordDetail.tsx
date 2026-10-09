@@ -13,7 +13,7 @@ export function WordDetail() {
   const [editing, setEditing] = useState(false)
   const word = words.find((w) => w.id === id)
 
-  if (!word) return <EmptyState anim="think" text={t('word.notFound')} />
+  if (!word) return <EmptyState anim="surprise" text={t('word.notFound')} />
 
   return (
     <div className="rise">

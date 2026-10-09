@@ -53,7 +53,10 @@ def remove_guide_lines(rgb: np.ndarray) -> np.ndarray:
         return np.array(sorted(rim), dtype=int)
 
     line_rows = with_rim(np.where(dark.mean(axis=1) > 0.85)[0], h)
-    line_cols = with_rim(np.where(dark.mean(axis=0) > 0.5)[0], w)  # frame borders can be partial
+    # Frame borders can be partial, but only sit near the edges — a straight body line in the middle is not one.
+    edge = max(4, int(w * 0.06))
+    cols = np.where(dark.mean(axis=0) > 0.5)[0]
+    line_cols = with_rim(cols[(cols < edge) | (cols >= w - edge)], w)
 
     def bridge_rows(rows: np.ndarray):
         row_set = set(rows.tolist())
@@ -83,7 +86,7 @@ def to_rgba(rgb: np.ndarray) -> np.ndarray:
     background = np.isin(labels, border[border > 0])
     # Large enclosed white areas (between legs, arm and body) are background too; eyes and teeth are small.
     sizes = ndimage.sum(whiteish, labels, range(1, labels.max() + 1))
-    big = np.where(sizes > whiteish.size * 0.004)[0] + 1
+    big = np.where(sizes > whiteish.size * 0.0028)[0] + 1  # tuned: eye whites of the surprised face stay below this
     background |= np.isin(labels, big)
 
     alpha = np.where(background, 0, 255).astype(np.float32)

@@ -107,9 +107,12 @@ function Choice({ word, pool, onAnswer }: { word: Word; pool: Word[]; onAnswer: 
         })}
       </div>
       {picked !== null && (
-        <button className="btn btn-primary mt-4 w-full" onClick={() => onAnswer(picked === word.id)}>
-          {t('study.next')} →
-        </button>
+        <div className="mt-4 flex items-end gap-3">
+          <Mascot anim={picked === word.id ? 'celebrate' : 'surprise'} size={80} />
+          <button className="btn btn-primary flex-1" onClick={() => onAnswer(picked === word.id)}>
+            {t('study.next')} →
+          </button>
+        </div>
       )}
     </div>
   )
@@ -148,9 +151,10 @@ function TypeIn({ word, listen, onAnswer }: { word: Word; listen: boolean; onAns
         autoFocus
       />
       {result !== null && (
-        <p className={`mt-3 text-center font-bold ${result ? 'text-success' : 'text-danger'}`}>
-          {result ? t('study.correct') : `${t('study.wrong')} ${word.word}`}
-        </p>
+        <div className="mt-3 flex items-center justify-center gap-3">
+          <Mascot anim={result ? 'celebrate' : 'surprise'} size={72} />
+          <p className={`font-bold ${result ? 'text-success' : 'text-danger'}`}>{result ? t('study.correct') : `${t('study.wrong')} ${word.word}`}</p>
+        </div>
       )}
       <button type="submit" className="btn btn-primary mt-4 w-full" disabled={result === null && !value.trim()}>
         {result === null ? t('study.check') : `${t('study.next')} →`}

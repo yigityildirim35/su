@@ -1,13 +1,19 @@
 import { Mascot } from '../mascot/Mascot'
 
-/** First-load splash: the mascot walking in the middle of the screen. */
-export function LoadingScreen({ leaving }: { leaving: boolean }) {
+/** First-load splash: once the frames are ready, the mascot walks across the middle of the screen. */
+export function LoadingScreen({ walking, leaving }: { walking: boolean; leaving: boolean }) {
   return (
     <div
-      className={`fixed inset-0 z-40 flex flex-col items-center justify-center bg-bg transition-opacity duration-300 ${leaving ? 'pointer-events-none opacity-0' : 'opacity-100'}`}
+      className={`fixed inset-0 z-40 flex flex-col items-center justify-center overflow-hidden bg-bg transition-opacity duration-300 ${leaving ? 'pointer-events-none opacity-0' : 'opacity-100'}`}
       aria-hidden={leaving}
     >
-      <Mascot anim="walk" size={160} label="Loading" />
+      <div className="flex h-[170px] w-full items-end justify-center">
+        {walking && (
+          <div className="splash-walk">
+            <Mascot anim="walk" size={160} label="Loading" />
+          </div>
+        )}
+      </div>
       <div className="mt-4 text-3xl font-extrabold text-primary">Su</div>
       <div className="mt-3 flex gap-1.5" aria-hidden>
         {[0, 1, 2].map((i) => (
